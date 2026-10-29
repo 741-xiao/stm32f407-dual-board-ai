@@ -1,0 +1,2 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-10-12 19:09:44

@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Keil and embedded build output
+Project/Build/
+Project/OBJ/
+Project/Listings/
+Objects/
+Listings/
+*.uvguix.*
+*.uvoptx
+*.bak
+*.dep
+*.hex
+*.axf
+*.map
+*.lst
+*.o
+*.d
+*.crf
+*.htm
+
+# Maven and IDE files
+target/
+.idea/
+.vscode/
+*.iml
+
+# Local configuration and OS files
+server.toml
+.env
+.DS_Store
+Thumbs.db
+Desktop.ini

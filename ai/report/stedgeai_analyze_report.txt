@@ -1,0 +1,160 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-10-12 19:20:02
+Parameters            : analyze --target stm32f4 --name network -m C:/Users/ygsdbdddz/lab7_ai/model.onnx --compression none --verbosity 1 --output C:/Users/ygsdbdddz/lab7_ai/out
+
+Exec/report summary (analyze)
+------------------------------------------------------------------
+model file         :   C:\Users\ygsdbdddz\lab7_ai\model.onnx      
+type               :   onnx                                       
+c_name             :   network                                    
+compression        :   none                                       
+options            :   allocate-inputs, allocate-outputs          
+optimization       :   balanced                                   
+target/series      :   stm32f4                                    
+workspace dir      :   C:\Users\ygsdbdddz\lab7_ai\st_ai_ws        
+output dir         :   C:\Users\ygsdbdddz\lab7_ai\out             
+model_fmt          :   float                                      
+model_name         :   model                                      
+model_hash         :   0x31cfbbd0567f58f6533060af0de836cf         
+params #           :   402 items (1.57 KiB)                       
+------------------------------------------------------------------
+input 1/1          :   'input', f32(1x5), 20 Bytes, activations   
+output 1/1         :   'output', f32(1x2), 8 Bytes, activations   
+macc               :   464                                        
+weights (ro)       :   1,608 B (1.57 KiB) (1 segment)             
+activations (rw)   :   128 B (128 B) (1 segment) *                
+ram (total)        :   128 B (128 B) = 128 + 0 + 0                
+------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - model
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+m_id   layer (type,original)            oshape        param/size     macc   connected to   | c_size         c_macc          c_type                
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+1      W1 (Placeholder, Gemm)           [b:5,c:16]    80/320                               | +64(+20.0%)    +96(+100.0%)    Dense_[0]             
+       B1 (Placeholder, Gemm)           [b:16]        16/64                                | -64(-100.0%)                   
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+3      W2 (Placeholder, Gemm)           [b:16,c:16]   256/1,024                            | +64(+6.2%)     +272(+100.0%)   Dense_[2]             
+       B2 (Placeholder, Gemm)           [b:16]        16/64                                | -64(-100.0%)                   
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+5      W3 (Placeholder, Gemm)           [b:16,c:2]    32/128                               | +8(+6.2%)      +34(+100.0%)    Dense_[4]             
+       B3 (Placeholder, Gemm)           [b:2]         2/8                                  | -8(-100.0%)                    
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+0      input (Input, )                  [b:1,c:5]                                          |                                
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+1      gemm1 (Gemm, Gemm)               [b:1,c:16]                     96          input   |                -96(-100.0%)    
+                                                                                      W1   | 
+                                                                                      B1   | 
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+2      relu1 (Nonlinearity, Relu)       [b:1,c:16]                     16          gemm1   |                                Nonlinearity_[1]      
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+3      gemm2 (Gemm, Gemm)               [b:1,c:16]                    272          relu1   |                -272(-100.0%)   
+                                                                                      W2   | 
+                                                                                      B2   | 
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+4      relu2 (Nonlinearity, Relu)       [b:1,c:16]                     16          gemm2   |                                Nonlinearity_[3]      
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+5      gemm3 (Gemm, Gemm)               [b:1,c:2]                      34          relu2   |                -34(-100.0%)    
+                                                                                      W3   | 
+                                                                                      B3   | 
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+6      output (Nonlinearity, Softmax)   [b:1,c:2]                      30          gemm3   |                                Nonlinearity_[o][5]   
+------ -------------------------------- ------------- ------------ ------ -------------- --- -------------- --------------- --------------------- 
+model/c-model: macc=464/464  weights=1,608/1,608  activations=--/128 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : model
+c-name                : network
+c-node #              : 6
+c-array #             : 13
+activations size      : 128 (1 segment)
+weights size          : 1608 (1 segment)
+macc                  : 464
+inputs                : ['input_output']
+outputs               : ['output_output']
+
+C-Arrays (13)
+------ ---------------- ----------- ------------------------- ------------- --------- 
+c_id   name (*_array)   item/size   domain/mem-pool           c-type        comment   
+------ ---------------- ----------- ------------------------- ------------- --------- 
+0      gemm1_bias       16/64       weights/weights           const float             
+1      gemm1_output     16/64       activations/**default**   float                   
+2      gemm1_weights    80/320      weights/weights           const float             
+3      gemm2_bias       16/64       weights/weights           const float             
+4      gemm2_output     16/64       activations/**default**   float                   
+5      gemm2_weights    256/1024    weights/weights           const float             
+6      gemm3_bias       2/8         weights/weights           const float             
+7      gemm3_output     2/8         activations/**default**   float                   
+8      gemm3_weights    32/128      weights/weights           const float             
+9      input_output     5/20        activations/**default**   float         /input    
+10     output_output    2/8         activations/**default**   float         /output   
+11     relu1_output     16/64       activations/**default**   float                   
+12     relu2_output     16/64       activations/**default**   float                   
+------ ---------------- ----------- ------------------------- ------------- --------- 
+
+C-Layers (6)
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+c_id   name (*_layer)   id   layer_type      macc   rom    tensors            shape (array id)   
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+0      gemm1            1    Dense           96     384    I: input_output    f32(1x5) (9)       
+                                                           W: gemm1_weights   f32(16x5) (2)      
+                                                           W: gemm1_bias      f32(16) (0)        
+                                                           O: gemm1_output    f32(1x16) (1)      
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+1      relu1            2    Nonlinearity    16     0      I: gemm1_output    f32(1x16) (1)      
+                                                           O: relu1_output    f32(1x16) (11)     
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+2      gemm2            3    Dense           272    1088   I: relu1_output    f32(1x16) (11)     
+                                                           W: gemm2_weights   f32(16x16) (5)     
+                                                           W: gemm2_bias      f32(16) (3)        
+                                                           O: gemm2_output    f32(1x16) (4)      
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+3      relu2            4    Nonlinearity    16     0      I: gemm2_output    f32(1x16) (4)      
+                                                           O: relu2_output    f32(1x16) (12)     
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+4      gemm3            5    Dense           34     136    I: relu2_output    f32(1x16) (12)     
+                                                           W: gemm3_weights   f32(2x16) (8)      
+                                                           W: gemm3_bias      f32(2) (6)         
+                                                           O: gemm3_output    f32(1x2) (7)       
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+5      output           6    Nonlinearity    30     0      I: gemm3_output    f32(1x2) (7)       
+                                                           O: output_output   f32(1x2) (10)      
+------ ---------------- ---- --------------- ------ ------ ------------------ ------------------ 
+
+
+
+Number of operations per c-layer
+------- ------ ----------------------- ----- -------------- 
+c_id    m_id   name (type)               #op           type 
+------- ------ ----------------------- ----- -------------- 
+0       1      gemm1 (Dense)              96   smul_f32_f32 
+1       2      relu1 (Nonlinearity)       16     op_f32_f32 
+2       3      gemm2 (Dense)             272   smul_f32_f32 
+3       4      relu2 (Nonlinearity)       16     op_f32_f32 
+4       5      gemm3 (Dense)              34   smul_f32_f32 
+5       6      output (Nonlinearity)      30     op_f32_f32 
+------- ------ ----------------------- ----- -------------- 
+total                                    464 
+
+Number of operation types
+---------------- ----- ----------- 
+operation type       #           % 
+---------------- ----- ----------- 
+smul_f32_f32       402       86.6% 
+op_f32_f32          62       13.4% 
+
+Complexity report (model)
+------ -------- ------------------------- ------------------------- ------ 
+m_id   name     c_macc                    c_rom                     c_id   
+------ -------- ------------------------- ------------------------- ------ 
+1      W1       ||||||            20.7%   ||||||            23.9%   [0]    
+3      W2       ||||||||||||||||  58.6%   ||||||||||||||||  67.7%   [2]    
+5      W3       ||                 7.3%   ||                 8.5%   [4]    
+2      relu1    |                  3.4%   |                  0.0%   [1]    
+4      relu2    |                  3.4%   |                  0.0%   [3]    
+6      output   ||                 6.5%   |                  0.0%   [5]    
+------ -------- ------------------------- ------------------------- ------ 
+macc=464 weights=1,608 act=128 ram_io=0
